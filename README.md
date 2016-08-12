@@ -7,17 +7,18 @@ Adds frame-by-frame scrubbing and SMPTE timecode to a videojs player instance
 <!-- START doctoc -->
 <!-- END doctoc -->
 ## Installation
-
+Clone this repository and run
 ```sh
-npm install --save videojs-nle-controls
+npm install
 ```
-
-The npm installation is preferred, but Bower works, too.
-
+To build an uncompressed, unminified version run
 ```sh
-bower install  --save videojs-nle-controls
+npm run build:js
 ```
-
+To build a compressed, minified version run
+```sh
+npm run build:js:min
+```
 ## Usage
 
 To include videojs-nle-controls on your website or web application, use any of the following methods.
@@ -36,33 +37,16 @@ This is the simplest case. Get the script in whatever way you prefer and include
 </script>
 ```
 
-### Browserify
+### ES6 Imports
 
-When using with Browserify, install videojs-nle-controls via npm and `require` the plugin as you would any other module.
+When using with ES6 imports, build the plugin and import it
 
 ```js
-var videojs = require('video.js');
-
-// The actual plugin function is exported by this module, but it is also
-// attached to the `Player.prototype`; so, there is no need to assign it
-// to a variable.
-require('videojs-nle-controls');
+import nleControls  from './dist/videojs-nle-controls';
 
 var player = videojs('my-video');
 
 player.nleControls();
-```
-
-### RequireJS/AMD
-
-When using with RequireJS (or another AMD library), get the script in whatever way you prefer and `require` the plugin as you normally would:
-
-```js
-require(['video.js', 'videojs-nle-controls'], function(videojs) {
-  var player = videojs('my-video');
-
-  player.nleControls();
-});
 ```
 
 ## License

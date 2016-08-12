@@ -19,7 +19,7 @@ const defaults = {};
  */
 const onPlayerReady = function(player: Object, options: Object) {
   player.addClass('vjs-nle-controls');
-  let framerate: number = options.framerate ? options.framerate : 29.97;
+  let framerate: number = options.framerate ? options.framerate : 24.0;
   if(options.frameControls) {
     initControls(player, framerate);
   }
