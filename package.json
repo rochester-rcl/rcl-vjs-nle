@@ -4,8 +4,9 @@
   "description": "Adds frame-by-frame scrubbing and SMPTE timecode to a videojs player instance",
   "scripts": {
     "prebuild": "npm run clean",
-    "build:js": "webpack",
-    "build:js:min": "webpack && uglifyjs dist/videojs-nle-controls.js --comments --mangle --compress -o dist/videojs-nle-controls.min.js",
+    "build:js:browser": "webpack",
+    "build:js:babel": "babel src/plugin.js --out-file dist/videojs-nle-controls.js",
+    "build:js:min": "babel src/plugin.js --out-file dist/videojs-nle-controls.js && uglifyjs dist/videojs-nle-controls.js -o dist/videojs-nle-controls.min.js",
     "test": "karma start test/karma.conf.js",
     "test:chrome": "npm run pretest && karma start test/karma.conf.js --browsers Chrome",
     "test:firefox": "npm run pretest && karma start test/karma.conf.js --browsers Firefox",
