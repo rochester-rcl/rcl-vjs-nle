@@ -20,11 +20,12 @@ const defaults = {};
 const onPlayerReady = function(player: Object, options: Object) {
   player.addClass('vjs-nle-controls');
   let framerate: number = options.framerate ? options.framerate : 24.0;
+  let duration: number = options.duration ? () => {return options.duration} : () => {return player.duration()};
   if(options.frameControls) {
-    initControls(player, framerate);
+    initControls(player, framerate, duration);
   }
   if(options.smpteTimecode) {
-    initSMPTE(player, framerate);
+    initSMPTE(player, framerate, duration);
   }
 };
 
@@ -36,16 +37,16 @@ const onPlayerReady = function(player: Object, options: Object) {
  *@param     {Player} player
  *@param     {number} framerate
  */
-const initControls = function(player: Object, framerate: number) {
+const initControls = function(player: Object, framerate: number, duration: number) {
+    const frame: number = parseFloat((1 / framerate).toFixed(2));
     let keyDown = function keyDown(event){
       const keyName: string = event.keyCode;
-      const frame: number = 1 / framerate;
       switch(keyName){
         case 37:
           frameReverse(player, frame);
           break;
         case 39:
-          frameForward(player, frame);
+          frameForward(player, frame, duration);
           break;
       }
     }
@@ -63,6 +64,7 @@ const initControls = function(player: Object, framerate: number) {
    let currentTime: number = player.currentTime();
    if(currentTime > 0) {
      let decrement: number = currentTime - frame;
+     console.log(decrement);
      player.currentTime(decrement);
    }
  }
@@ -74,11 +76,12 @@ const initControls = function(player: Object, framerate: number) {
 *@param {Player} player
 *@param {number} frame
 */
-const frameForward = function(player: Object, frame: number) {
+const frameForward = function(player: Object, frame: number, duration: number) {
   let currentTime: number = player.currentTime();
-  let duration: number = player.duration();
-  if(currentTime < duration) {
-    let increment: number = Math.min(duration, currentTime + frame);
+  console.log('frame',frame);
+  if(currentTime < duration()) {
+    let increment: number = Math.min(duration(), currentTime + frame);
+    console.log(increment);
     player.currentTime(increment);
   }
 }
@@ -91,7 +94,8 @@ const frameForward = function(player: Object, frame: number) {
 *@param {number} framerate
 */
 const toSMPTE = function(currentTime: number, framerate: number) {
-  let currentFrame: number = currentTime * framerate;
+  let currentFrame: number = parseInt(currentTime * framerate);
+  console.log('frame', currentFrame,'time', currentTime);
   let hours: number = Math.floor(currentTime / 3600);
   let minutes: number = Math.floor(currentTime / 60);
   let seconds: number = parseInt(currentTime - (hours * 3600) - (minutes * 60));
@@ -113,13 +117,23 @@ const toSMPTE = function(currentTime: number, framerate: number) {
 }
 
 /**
+* Function to display current time (seconds) to milliseconds
+*
+*@function toMS
+*@param {number} currentTimeInSeconds
+*/
+const toMS = function(currentTimeInSeconds: number) {
+    return Math.ceil(currentTimeInSeconds * 1000)
+}
+
+/**
 * Function to display current time as SMPTE (HH:MM:SS:FF) timecode
 *
 *@function initSMPTE
 *@param {Player} player
 */
 
-const initSMPTE = function(player: Object, framerate: number) {
+const initSMPTE = function(player: Object, framerate: number, duration) {
     const setCurrentTimeDisplay = () => {
       let currentTimeDisplay: HTMLCollection<HTMLElement> = player.controlBar.progressControl.seekBar.playProgressBar.el();
       let currentTime: number = player.currentTime();
@@ -127,10 +141,9 @@ const initSMPTE = function(player: Object, framerate: number) {
     };
     const setRemainingTimeDisplay = () => {
       let currentTime: number = player.currentTime();
-      let duration: number = player.duration();
       let remainingTimeDisplay: HTMLCollection<HTMLElement> = player.controlBar.remainingTimeDisplay.el();
       remainingTimeDisplay.innerHTML = '<div class="vjs-remaining-time-display" aria-live="off"><span class="vjs-control-text">Remaining Time</span>'
-                                           + toSMPTE(currentTime, framerate) + ' / ' + toSMPTE(duration, framerate) + '</div>'
+                                           + toSMPTE(currentTime, framerate) + ' / ' + toSMPTE(duration(), framerate) + '</div>'
     }
     player.on('timeupdate', setCurrentTimeDisplay);
     player.on('timeupdate', setRemainingTimeDisplay);
