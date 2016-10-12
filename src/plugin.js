@@ -64,7 +64,6 @@ const initControls = function(player: Object, framerate: number, duration: numbe
    let currentTime: number = player.currentTime();
    if(currentTime > 0) {
      let decrement: number = currentTime - frame;
-     console.log(decrement);
      player.currentTime(decrement);
    }
  }
@@ -78,10 +77,8 @@ const initControls = function(player: Object, framerate: number, duration: numbe
 */
 const frameForward = function(player: Object, frame: number, duration: number) {
   let currentTime: number = player.currentTime();
-  console.log('frame',frame);
   if(currentTime < duration()) {
     let increment: number = Math.min(duration(), currentTime + frame);
-    console.log(increment);
     player.currentTime(increment);
   }
 }
@@ -95,7 +92,6 @@ const frameForward = function(player: Object, frame: number, duration: number) {
 */
 const toSMPTE = function(currentTime: number, framerate: number) {
   let currentFrame: number = parseInt(currentTime * framerate);
-  console.log('frame', currentFrame,'time', currentTime);
   let hours: number = Math.floor(currentTime / 3600);
   let minutes: number = Math.floor(currentTime / 60);
   let seconds: number = parseInt(currentTime - (hours * 3600) - (minutes * 60));
