@@ -3,9 +3,9 @@
 Adds non-linear editor style keyboard controls and smpte timecode to videojs
 
 ## Installation
-
+Clone this repo, then:
 ```sh
-npm install --save videojs-nle
+npm install && npm run build
 ```
 
 ## Usage
@@ -22,7 +22,11 @@ This is the simplest case. Get the script in whatever way you prefer and include
 <script>
   var player = videojs('my-video');
 
-  player.nle();
+  player.nle({
+          frameControls: true, // enables frame-by frame controls
+          smpteTimecode: true, // enables SMPTE formatted timecode
+          framerate: 29.97 // framerate should be set here
+        });
 </script>
 ```
 
